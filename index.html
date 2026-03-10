@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini Studio – T‑shirt Customizer</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      padding: 12px 20px;
+      background: #111827;
+      color: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+    header span {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+    .studio {
+      display: grid;
+      grid-template-columns: 260px minmax(420px, 1fr) 260px;
+      gap: 12px;
+      padding: 12px;
+      height: calc(100vh - 52px);
+    }
+    .panel {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .panel h2 {
+      font-size: 14px;
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+    .panel section {
+      margin-bottom: 12px;
+    }
+    .panel label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .panel input[type="text"],
+    .panel select {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+    }
+    .panel input[type="color"] {
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    .panel button {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #111827;
+      color: #f9fafb;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .panel button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .panel .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid #d1d5db;
+      cursor: pointer;
+      background: #f9fafb;
+    }
+    .chip.active {
+      background: #111827;
+      color: #f9fafb;
+      border-color: #111827;
+    }
+    .canvas-shell {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #e5e7eb, #d1d5db);
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .tshirt-frame {
+      position: relative;
+      width: 360px;
+      height: 420px;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.25);
+      background: #ffffff;
+    }
+    .tshirt-body {
+      position: absolute;
+      inset: 18px;
+      border-radius: 22px;
+      background: #ffffff;
+      transition: background-color 0.2s ease;
+    }
+    canvas {
+      position: relative;
+      z-index: 1;
+      border-radius: 18px;
+      background: transparent;
+    }
+    .template-list {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .template-card {
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
+      background: #f9fafb;
+    }
+    .template-card:hover {
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+      transform: translateY(-1px);
+    }
+    .template-thumb {
+      width: 40px;
+      height: 50px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #111827, #4b5563);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f9fafb;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .template-meta {
+      flex: 1;
+    }
+    .template-meta h3 {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .template-meta p {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .export-box {
+      font-size: 11px;
+      color: #6b7280;
+      word-break: break-all;
+      max-height: 80px;
+      overflow-y: auto;
+      border-radius: 6px;
+      border: 1px dashed #d1d5db;
+      padding: 6px;
+      margin-top: 6px;
+    }
+    @media (max-width: 1024px) {
+      .studio {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        height: auto;
+      }
+      .panel {
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Mini Studio</h1>
+      <span>T‑shirt customizer inspired by VistaPrint Studio</span>
+    </div>
+    <span>Prototype · Frontend only</span>
+  </header>
+
+  <div id="root"></div>
+
+  <!-- React + ReactDOM + Babel (UMD) -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Fabric.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const PRINT_MARGIN = 30;
+
+    function useFabricCanvas() {
+      const canvasRef = useRef(null);
+      const fabricRef = useRef(null);
+      const printAreaRef = useRef(null);
+
+      useEffect(() => {
+        const canvasEl = canvasRef.current;
+        if (!canvasEl) return;
+
+        const canvas = new fabric.Canvas(canvasEl, {
+          preserveObjectStacking: true,
+          selection: true
+        });
+
+        const printArea = new fabric.Rect({
+          left: PRINT_MARGIN,
+          top: PRINT_MARGIN,
+          width: canvas.width - PRINT_MARGIN * 2,
+          height: canvas.height - PRINT_MARGIN * 2,
+          fill: 'rgba(0,0,0,0)',
+          stroke: '#9ca3af',
+          strokeDashArray: [4, 4],
+          selectable: false,
+          evented: false
+        });
+
+        canvas.add(printArea);
+        canvas.sendToBack(printArea);
+
+        fabricRef.current = canvas;
+        printAreaRef.current = printArea;
+
+        return () => {
+          canvas.dispose();
+        };
+      }, []);
+
+      const addText = (value, color = '#111827') => {
+        const canvas = fabricRef.current;
+        if (!canvas || !value) return;
+        const text = new fabric.Textbox(value, {
+          left: canvas.width / 2,
+          top: canvas.height / 2,
+          originX: 'center',
+          originY: 'center',
+          fill: color,
+          fontSize: 28,
+          fontWeight: 'bold',
+          editable: true
+        });
+        canvas.add(text);
+        canvas.setActiveObject(text);
+        canvas.renderAll();
+      };
+
+      const addImageFromUrl = (url) => {
+        const canvas = fabricRef.current;
+        const printArea = printAreaRef.current;
+        if (!canvas || !url) return;
+
+        fabric.Image.fromURL(url, (img) => {
+          const scale = Math.min(
+            (printArea.width * 0.8) / img.width,
+            (printArea.height * 0.8) / img.height,
+            1
+          );
+          img.set({
+            left: canvas.width / 2,
+            top: canvas.height / 2,
+            originX: 'center',
+            originY: 'center',
+            scaleX: scale,
+            scaleY: scale
+          });
+          canvas.add(img);
+          canvas.setActiveObject(img);
+          canvas.renderAll();
+        }, { crossOrigin: 'anonymous' });
+      };
+
+      const addImageFromFile = (file) => {
+        const canvas = fabricRef.current;
+        const printArea = printAreaRef.current;
+        if (!canvas || !file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          fabric.Image.fromURL(e.target.result, (img) => {
+            const scale = Math.min(
+              (printArea.width * 0.8) / img.width,
+              (printArea.height * 0.8) / img.height,
+              1
+            );
+            img.set({
+              left: canvas.width / 2,
+              top: canvas.height / 2,
+              originX: 'center',
+              originY: 'center',
+              scaleX: scale,
+              scaleY: scale
+            });
+            canvas.add(img);
+            canvas.setActiveObject(img);
+            canvas.renderAll();
+          });
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const setActiveTextColor = (color) => {
+        const canvas = fabricRef.current;
+        if (!canvas) return;
+        const active = canvas.getActiveObject();
+        if (active && active.type === 'textbox') {
+          active.set('fill', color);
+          canvas.renderAll();
+        }
+      };
+
+      const bringToFront = () => {
+        const canvas = fabricRef.current;
+        const printArea = printAreaRef.current;
+        if (!canvas) return;
+        const active = canvas.getActiveObject();
+        if (active && active !== printArea) {
+          canvas.bringToFront(active);
+          canvas.renderAll();
+        }
+      };
+
+      const deleteActive = () => {
+        const canvas = fabricRef.current;
+        const printArea = printAreaRef.current;
+        if (!canvas) return;
+        const active = canvas.getActiveObject();
+        if (active && active !== printArea) {
+          canvas.remove(active);
+          canvas.discardActiveObject();
+          canvas.renderAll();
+        }
+      };
+
+      const clearDesign = () => {
+        const canvas = fabricRef.current;
+        const printArea = printAreaRef.current;
+        if (!canvas || !printArea) return;
+        canvas.getObjects().forEach(obj => {
+          if (obj !== printArea) canvas.remove(obj);
+        });
+        canvas.renderAll();
+      };
+
+      const exportPng = () => {
+        const canvas = fabricRef.current;
+        const printArea = printAreaRef.current;
+        if (!canvas || !printArea) return null;
+
+        const prevStroke = printArea.stroke;
+        printArea.set('stroke', null);
+        canvas.renderAll();
+
+        const dataUrl = canvas.toDataURL({
+          format: 'png',
+          multiplier: 2,
+          left: PRINT_MARGIN,
+          top: PRINT_MARGIN,
+          width: printArea.width,
+          height: printArea.height
+        });
+
+        printArea.set('stroke', prevStroke);
+        canvas.renderAll();
+
+        return dataUrl;
+      };
+
+      return {
+        canvasRef,
+        addText,
+        addImageFromUrl,
+        addImageFromFile,
+        setActiveTextColor,
+        bringToFront,
+        deleteActive,
+        clearDesign,
+        exportPng
+      };
+    }
+
+    const TEMPLATES = [
+      {
+        id: 'bold-logo',
+        name: 'Logo centré',
+        description: 'Logo + slogan au centre',
+        apply: (api) => {
+          api.clearDesign();
+          api.addImageFromUrl('https://dummyimage.com/300x120/111827/f9fafb&text=LOGO');
+          api.addText('Votre slogan ici', '#f97316');
+        }
+      },
+      {
+        id: 'big-text',
+        name: 'Texte impact',
+        description: 'Grand texte typographique',
+        apply: (api) => {
+          api.clearDesign();
+          api.addText('DANCING', '#111827');
+          api.addText('WATERS', '#2563eb');
+        }
+      },
+      {
+        id: 'badge',
+        name: 'Badge poitrine',
+        description: 'Petit logo côté cœur',
+        apply: (api) => {
+          const canvas = api.canvasRef.current ? fabric.Canvas.getCanvasById?.(api.canvasRef.current.id) : null;
+          api.clearDesign();
+          api.addImageFromUrl('https://dummyimage.com/120x120/111827/f9fafb&text=DW');
+        }
+      }
+    ];
+
+    function LeftPanel({ side, setSide, tshirtColor, setTshirtColor, onAddText, onUploadImage, onClear }) {
+      const [text, setText] = useState('');
+      const [textColor, setTextColor] = useState('#111827');
+
+      const handleAddText = () => {
+        if (!text.trim()) return;
+        onAddText(text.trim(), textColor);
+      };
+
+      return (
+        <div className="panel">
+          <h2>Produit & contenu</h2>
+
+          <section>
+            <label>Face du produit</label>
+            <div className="chip-row">
+              {['front', 'back'].map(s => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`chip ${side === s ? 'active' : ''}`}
+                  onClick={() => setSide(s)}
+                >
+                  {s === 'front' ? 'Avant' : 'Arrière'}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <label>Couleur du T‑shirt</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <input
+                type="color"
+                value={tshirtColor}
+                onChange={e => setTshirtColor(e.target.value)}
+              />
+              <span style={{ fontSize: 12, color: '#6b7280' }}>{tshirtColor}</span>
+            </div>
+          </section>
+
+          <section>
+            <label>Ajouter du texte</label>
+            <input
+              type="text"
+              placeholder="Votre texte"
+              value={text}
+              onChange={e => setText(e.target.value)}
+            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+              <input
+                type="color"
+                value={textColor}
+                onChange={e => setTextColor(e.target.value)}
+              />
+              <button type="button" onClick={handleAddText}>Ajouter</button>
+            </div>
+          </section>
+
+          <section>
+            <label>Ajouter une image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) onUploadImage(file);
+                e.target.value = '';
+              }}
+            />
+          </section>
+
+          <section>
+            <label>Actions globales</label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" className="secondary" onClick={onClear}>
+                Réinitialiser
+              </button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    function RightPanel({ onBringFront, onDelete, onApplyTemplate, onExport, exportPreview }) {
+      return (
+        <div className="panel">
+          <h2>Templates & export</h2>
+
+          <section>
+            <label>Templates de mise en page</label>
+            <div className="template-list">
+              {TEMPLATES.map(t => (
+                <div
+                  key={t.id}
+                  className="template-card"
+                  onClick={() => onApplyTemplate(t)}
+                >
+                  <div className="template-thumb">
+                    {t.name.split(' ')[0]}
+                  </div>
+                  <div className="template-meta">
+                    <h3>{t.name}</h3>
+                    <p>{t.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <label>Objet sélectionné</label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" className="secondary" onClick={onBringFront}>
+                Avant-plan
+              </button>
+              <button type="button" className="secondary" onClick={onDelete}>
+                Supprimer
+              </button>
+            </div>
+          </section>
+
+          <section>
+            <label>Export PNG</label>
+            <button type="button" onClick={onExport}>Exporter</button>
+            {exportPreview && (
+              <div className="export-box">
+                {exportPreview.slice(0, 120)}…
+              </div>
+            )}
+          </section>
+        </div>
+      );
+    }
+
+    function StudioApp() {
+      const [side, setSide] = useState('front');
+      const [tshirtColor, setTshirtColor] = useState('#ffffff');
+      const [exportPreview, setExportPreview] = useState(null);
+
+      const fabricApi = useFabricCanvas();
+
+      const handleExport = () => {
+        const dataUrl = fabricApi.exportPng();
+        if (!dataUrl) return;
+        setExportPreview(dataUrl);
+
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `tshirt-${side}.png`;
+        link.click();
+      };
+
+      const handleApplyTemplate = (template) => {
+        template.apply(fabricApi);
+      };
+
+      return (
+        <div className="studio">
+          <LeftPanel
+            side={side}
+            setSide={setSide}
+            tshirtColor={tshirtColor}
+            setTshirtColor={setTshirtColor}
+            onAddText={fabricApi.addText}
+            onUploadImage={fabricApi.addImageFromFile}
+            onClear={fabricApi.clearDesign}
+          />
+
+          <div className="panel">
+            <h2>Éditeur {side === 'front' ? 'avant' : 'arrière'}</h2>
+            <div className="canvas-shell">
+              <div className="tshirt-frame">
+                <div
+                  className="tshirt-body"
+                  style={{ backgroundColor: tshirtColor }}
+                />
+                <canvas
+                  id="studio-canvas"
+                  ref={fabricApi.canvasRef}
+                  width={300}
+                  height={360}
+                />
+              </div>
+            </div>
+          </div>
+
+          <RightPanel
+            onBringFront={fabricApi.bringToFront}
+            onDelete={fabricApi.deleteActive}
+            onApplyTemplate={handleApplyTemplate}
+            onExport={handleExport}
+            exportPreview={exportPreview}
+          />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<StudioApp />);
+  </script>
+</body>
+</html>
