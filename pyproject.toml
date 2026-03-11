@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fp-cameroon-studio"
+version = "0.1.0"
+description = "Fully Promoted Cameroon Studio Webapp"
+authors = [{name = "Marcel Ndeffo", email = "marcel.ndeffo@gmail.com"}]
+license = "MIT"
+readme = "readme.md"
+requires-python = ">=3.10"
+dependencies = [
+    "hatchling",
+    "fastapi",
+    "uvicorn",
+    "firebase-admin",
+    "python-multipart",
+]
+
+[project.urls]
+Homepage = "https://tesselite.com"
+
+[tool.hatch.build]
+include = ["toolbox"]
+
+[tool.setuptools.packages.find]
+include = [""]
+exclude = ["*"]
