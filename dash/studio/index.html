@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studio Créatif · VistaPrint-like</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Montserrat:wght@400;700&family=Open+Sans&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* (styles identiques au code précédent, inchangés) */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f4f6fa;
+      color: #1e293b;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #0b1a2e;
+      color: white;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    header h1 { 
+      font-size: 1.5rem; 
+      font-weight: 600; 
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    header .badge {
+      background: #f15a24;
+      padding: 0.25rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    .studio {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr 320px;
+      gap: 1rem;
+      padding: 1rem;
+      overflow: hidden;
+    }
+    .panel {
+      background: white;
+      border-radius: 20px;
+      padding: 1.25rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      overflow-y: auto;
+      transition: box-shadow 0.2s;
+    }
+    .panel:hover {
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
+    .panel h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #4b5563;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .product-tabs {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .product-tab {
+      background: #f1f5f9;
+      border: none;
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .product-tab.active {
+      background: #0f172a;
+      color: white;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.3);
+    }
+    .product-tab i {
+      font-size: 1rem;
+    }
+    .face-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .face-btn {
+      flex: 1;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 40px;
+      padding: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .face-btn.active {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f8fafc;
+      padding: 0.5rem;
+      border-radius: 12px;
+    }
+    .color-row input[type="color"] {
+      width: 48px;
+      height: 40px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .text-tools {
+      background: #f9fbfd;
+      border-radius: 16px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      border: 1px solid #eef2f6;
+    }
+    .tool-row {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tool-btn {
+      background: white;
+      border: 1px solid #d1d9e6;
+      border-radius: 8px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #1e293b;
+    }
+    .tool-btn i {
+      font-size: 1rem;
+    }
+    .tool-btn.active {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+    .tool-btn.icon {
+      font-weight: 600;
+      padding: 0.4rem 0.7rem;
+    }
+    select, input[type="number"], input[type="text"] {
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #d1d9e6;
+      background: white;
+      font-size: 0.85rem;
+      transition: 0.15s;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: #f15a24;
+      box-shadow: 0 0 0 3px rgba(241,90,36,0.15);
+    }
+    .canvas-shell {
+      background: #eef2f6;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 500px;
+      background-image: radial-gradient(circle at 20px 20px, #cbd5e1 2px, transparent 2px);
+      background-size: 40px 40px;
+    }
+    .canvas-container {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 25px 40px -12px rgba(0,0,0,0.35);
+      padding: 8px;
+    }
+    .layer-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      max-height: 240px;
+      overflow-y: auto;
+      border: 1px solid #e6edf4;
+      border-radius: 14px;
+      padding: 0.5rem;
+      background: #ffffff;
+    }
+    .layer-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.6rem;
+      background: #fbfdff;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .layer-item.active {
+      border-color: #f15a24;
+      background: #fff2ed;
+    }
+    .layer-item .layer-preview {
+      width: 28px;
+      height: 28px;
+      background: #eef2f6;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #4b5563;
+    }
+    .layer-item .layer-name {
+      flex: 1;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .layer-actions {
+      display: flex;
+      gap: 0.2rem;
+    }
+    .layer-actions button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.2rem;
+      color: #64748b;
+      transition: 0.1s;
+    }
+    .layer-actions button:hover {
+      color: #0f172a;
+    }
+    .export-preview {
+      font-size: 0.7rem;
+      word-break: break-all;
+      background: #f1f5f9;
+      padding: 0.6rem;
+      border-radius: 10px;
+      max-height: 80px;
+      overflow: auto;
+      border: 1px dashed #94a3b8;
+    }
+    .property-group {
+      background: #f9fbfd;
+      border-radius: 14px;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+    }
+    .property-group h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.8rem;
+      color: #1e293b;
+      font-weight: 600;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 0.5rem 0;
+    }
+    button:active {
+      transform: scale(0.96);
+    }
+    .btn-primary {
+      background: #f15a24;
+      color: white;
+      border: none;
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-primary:hover {
+      background: #d94d1a;
+    }
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+    }
+    .modal h3 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    .modal input, .modal textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d9e6;
+      border-radius: 12px;
+      font-family: inherit;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-paint-brush"></i> Studio Créatif</h1>
+    <span class="badge"><i class="fas fa-crown"></i> Full Promoted CM</span>
+  </header>
+
+  <div id="root"></div>
+
+  <!-- Librairies -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    // ------------------------------------------------------------
+    // Données produits (avec icônes associées)
+    // ------------------------------------------------------------
+    const PRODUCTS = {
+      tshirt: {
+        id: 'tshirt',
+        name: 'T‑shirt',
+        icon: 'tshirt',
+        hasColor: true,
+        faces: ['front', 'back'],
+        printArea: { left: 50, top: 70, width: 300, height: 260 }
+      },
+      mug: {
+        id: 'mug',
+        name: 'Mug',
+        icon: 'mug-saucer',
+        hasColor: false,
+        faces: ['front', 'back'],
+        printArea: { left: 70, top: 100, width: 260, height: 200 }
+      },
+      cap: {
+        id: 'cap',
+        name: 'Casquette',
+        icon: 'hat-cowboy',
+        hasColor: true,
+        faces: ['front', 'back'],
+        printArea: { left: 120, top: 120, width: 160, height: 160 }
+      },
+      businesscard: {
+        id: 'businesscard',
+        name: 'Carte',
+        icon: 'id-card',
+        hasColor: false,
+        faces: ['front', 'back'],
+        printArea: { left: 40, top: 140, width: 320, height: 180 }
+      }
+    };
+
+    const FONT_FAMILIES = [
+      'Inter', 'Roboto', 'Montserrat', 'Open Sans', 'Arial', 'Helvetica', 'Times New Roman'
+    ];
+
+    // ------------------------------------------------------------
+    // Chemins vers vos mockups locaux 
+    // ------------------------------------------------------------
+    const MOCKUP_PATHS = {
+      tshirt: {
+        front: 'mockups/tshirt-front.png',
+        back:  'mockups/tshirt-back.png'
+      },
+      mug: {
+        front: 'mockups/mug-front.png',
+        back:  'mockups/mug-back.png'
+      },
+      cap: {
+        front: 'mockups/cap-front.png',
+        back:  'mockups/cap-back.png'
+      },
+      businesscard: {
+        front: 'mockups/card-front.png',
+        back:  'mockups/card-back.png'
+      }
+    };
+
+    // ------------------------------------------------------------
+    // Générateur de mockup de secours (fallback)
+    // ------------------------------------------------------------
+    function generateMockup(productId, face) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+      
+      // Fond dégradé
+      const gradient = ctx.createLinearGradient(0, 0, 400, 400);
+      gradient.addColorStop(0, '#e0e0e0');
+      gradient.addColorStop(1, '#c0c0c0');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 400, 400);
+      
+      // Texte indicatif
+      ctx.font = 'bold 24px Inter, sans-serif';
+      ctx.fillStyle = '#333';
+      ctx.textAlign = 'center';
+      ctx.fillText(PRODUCTS[productId].name, 200, 180);
+      ctx.font = '18px Inter';
+      ctx.fillStyle = '#555';
+      ctx.fillText(face === 'front' ? 'Face avant' : 'Face arrière', 200, 240);
+      
+      return canvas.toDataURL();
+    }
+
+    // ------------------------------------------------------------
+    // Fonction de chargement d'un mockup (local ou fallback)
+    // ------------------------------------------------------------
+    function loadMockupImage(productId, face, callback) {
+      const url = MOCKUP_PATHS[productId]?.[face];
+      if (!url) {
+        // Pas de chemin défini → fallback
+        const fallbackDataUrl = generateMockup(productId, face);
+        fabric.Image.fromURL(fallbackDataUrl, callback);
+        return;
+      }
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const fabricImg = new fabric.Image(img);
+        callback(fabricImg);
+      };
+      img.onerror = () => {
+        console.warn(`Impossible de charger ${url}, utilisation du fallback.`);
+        const fallbackDataUrl = generateMockup(productId, face);
+        fabric.Image.fromURL(fallbackDataUrl, callback);
+      };
+      img.src = url;
+    }
+
+    // ------------------------------------------------------------
+    // Hook personnalisé : gestion du canvas Fabric
+    // ------------------------------------------------------------
+    function useFabricCanvas() {
+      const canvasRef = useRef(null);
+      const fabricCanvas = useRef(null);
+      const printAreaRef = useRef(null);
+      const [activeObject, setActiveObject] = useState(null);
+
+      // Historique
+      const [history, setHistory] = useState([]);
+      const [historyIndex, setHistoryIndex] = useState(-1);
+      const skipSave = useRef(false);
+
+      const saveHistory = useCallback(() => {
+        if (!fabricCanvas.current || skipSave.current) return;
+        const state = fabricCanvas.current.toJSON();
+        setHistory(prev => [...prev.slice(0, historyIndex + 1), state]);
+        setHistoryIndex(prev => prev + 1);
+      }, [historyIndex]);
+
+      // Initialisation du canvas
+      useEffect(() => {
+        if (!canvasRef.current) return;
+        const canvas = new fabric.Canvas(canvasRef.current, {
+          preserveObjectStacking: true,
+          selection: true,
+          width: 400,
+          height: 400
+        });
+        fabricCanvas.current = canvas;
+
+        const printArea = new fabric.Rect({
+          left: 50, top: 70, width: 300, height: 260,
+          fill: 'transparent',
+          stroke: '#f15a24',
+          strokeDashArray: [6, 4],
+          strokeWidth: 2,
+          selectable: false,
+          evented: false,
+          name: 'printArea',
+          opacity: 0.8
+        });
+        canvas.add(printArea);
+        canvas.sendToBack(printArea);
+        printAreaRef.current = printArea;
+
+        canvas.on('object:added', saveHistory);
+        canvas.on('object:removed', saveHistory);
+        canvas.on('object:modified', saveHistory);
+        canvas.on('selection:created', (e) => setActiveObject(e.selected?.[0] || null));
+        canvas.on('selection:updated', (e) => setActiveObject(e.selected?.[0] || null));
+        canvas.on('selection:cleared', () => setActiveObject(null));
+
+        return () => canvas.dispose();
+      }, []);
+
+      // Définir le mockup comme image de fond
+      const setMockup = useCallback((productId, face) => {
+        if (!fabricCanvas.current) return;
+        const product = PRODUCTS[productId];
+        const area = product.printArea;
+
+        loadMockupImage(productId, face, (img) => {
+          fabricCanvas.current.setBackgroundImage(img, fabricCanvas.current.renderAll.bind(fabricCanvas.current), {
+            scaleX: 400 / img.width,
+            scaleY: 400 / img.height
+          });
+          
+          // Ajuster la zone d'impression selon le produit
+          printAreaRef.current.set({
+            left: area.left,
+            top: area.top,
+            width: area.width,
+            height: area.height
+          });
+          fabricCanvas.current.renderAll();
+        });
+      }, []);
+
+      // Charger un design JSON (sans toucher au fond)
+      const loadDesign = useCallback((json) => {
+        if (!fabricCanvas.current) return;
+        skipSave.current = true;
+        fabricCanvas.current.loadFromJSON(json, () => {
+          // S'assurer que la zone d'impression est présente
+          if (!fabricCanvas.current.getObjects().includes(printAreaRef.current)) {
+            fabricCanvas.current.add(printAreaRef.current);
+            fabricCanvas.current.sendToBack(printAreaRef.current);
+          }
+          fabricCanvas.current.renderAll();
+          skipSave.current = false;
+          saveHistory();
+        });
+      }, [saveHistory]);
+
+      // Exporter le design JSON (sans le fond)
+      const getDesignJSON = useCallback(() => {
+        return fabricCanvas.current ? fabricCanvas.current.toJSON() : null;
+      }, []);
+
+      // Vider le design (garde la zone)
+      const clearDesign = useCallback(() => {
+        if (!fabricCanvas.current) return;
+        const objects = fabricCanvas.current.getObjects();
+        objects.forEach(obj => {
+          if (obj !== printAreaRef.current) {
+            fabricCanvas.current.remove(obj);
+          }
+        });
+        fabricCanvas.current.renderAll();
+        saveHistory();
+      }, [saveHistory]);
+
+      // Ajouter du texte
+      const addText = useCallback((text, color = '#1e293b', options = {}) => {
+        if (!fabricCanvas.current || !text) return;
+        const canvas = fabricCanvas.current;
+        const printArea = printAreaRef.current;
+        const textbox = new fabric.Textbox(text, {
+          left: printArea.left + printArea.width / 2,
+          top: printArea.top + printArea.height / 2,
+          originX: 'center',
+          originY: 'center',
+          fill: color,
+          fontSize: options.fontSize || 28,
+          fontFamily: options.fontFamily || 'Inter',
+          fontWeight: options.bold ? 'bold' : 'normal',
+          fontStyle: options.italic ? 'italic' : 'normal',
+          underline: options.underline || false,
+          textAlign: options.align || 'left',
+          name: `Texte: ${text.substring(0,10)}`
+        });
+        canvas.add(textbox);
+        canvas.setActiveObject(textbox);
+        canvas.renderAll();
+        saveHistory();
+      }, [saveHistory]);
+
+      // Ajouter image depuis URL
+      const addImageFromUrl = useCallback((url) => {
+        if (!fabricCanvas.current) return;
+        const canvas = fabricCanvas.current;
+        const printArea = printAreaRef.current;
+        fabric.Image.fromURL(url, (img) => {
+          const scale = Math.min(
+            (printArea.width * 0.7) / img.width,
+            (printArea.height * 0.7) / img.height,
+            1
+          );
+          img.set({
+            left: printArea.left + printArea.width / 2,
+            top: printArea.top + printArea.height / 2,
+            originX: 'center',
+            originY: 'center',
+            scaleX: scale,
+            scaleY: scale,
+            name: 'Image'
+          });
+          canvas.add(img);
+          canvas.setActiveObject(img);
+          canvas.renderAll();
+          saveHistory();
+        }, { crossOrigin: 'anonymous' });
+      }, [saveHistory]);
+
+      const addImageFromFile = useCallback((file) => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => addImageFromUrl(e.target.result);
+        reader.readAsDataURL(file);
+      }, [addImageFromUrl]);
+
+      // Mise à jour d'une propriété de l'objet actif
+      const updateActiveObjectProperty = useCallback((key, value) => {
+        const active = fabricCanvas.current?.getActiveObject();
+        if (active) {
+          active.set(key, value);
+          fabricCanvas.current.renderAll();
+          saveHistory();
+        }
+      }, [saveHistory]);
+
+      const updateActiveTextStyle = useCallback((key, value) => {
+        const active = fabricCanvas.current?.getActiveObject();
+        if (active && active.type === 'textbox') {
+          active.set(key, value);
+          fabricCanvas.current.renderAll();
+          saveHistory();
+        }
+      }, [saveHistory]);
+
+      const bringToFront = useCallback(() => {
+        const active = fabricCanvas.current?.getActiveObject();
+        if (active) {
+          fabricCanvas.current.bringToFront(active);
+          fabricCanvas.current.renderAll();
+          saveHistory();
+        }
+      }, [saveHistory]);
+
+      const sendToBack = useCallback(() => {
+        const active = fabricCanvas.current?.getActiveObject();
+        if (active && active !== printAreaRef.current) {
+          fabricCanvas.current.sendToBack(active);
+          fabricCanvas.current.renderAll();
+          saveHistory();
+        }
+      }, [saveHistory]);
+
+      const duplicateActive = useCallback(() => {
+        const active = fabricCanvas.current?.getActiveObject();
+        if (!active || active === printAreaRef.current) return;
+        active.clone((cloned) => {
+          cloned.set({ left: active.left + 10, top: active.top + 10 });
+          fabricCanvas.current.add(cloned);
+          fabricCanvas.current.setActiveObject(cloned);
+          fabricCanvas.current.renderAll();
+          saveHistory();
+        });
+      }, [saveHistory]);
+
+      const deleteActive = useCallback(() => {
+        const active = fabricCanvas.current?.getActiveObject();
+        if (active && active !== printAreaRef.current) {
+          fabricCanvas.current.remove(active);
+          fabricCanvas.current.discardActiveObject();
+          fabricCanvas.current.renderAll();
+          saveHistory();
+        }
+      }, [saveHistory]);
+
+      const toggleVisibility = useCallback((obj) => {
+        obj.set('visible', !obj.visible);
+        fabricCanvas.current.renderAll();
+        saveHistory();
+      }, [saveHistory]);
+
+      const setLock = useCallback((obj, lock) => {
+        obj.set('lockMovementX', lock);
+        obj.set('lockMovementY', lock);
+        obj.set('lockScalingX', lock);
+        obj.set('lockScalingY', lock);
+        obj.set('lockRotation', lock);
+        fabricCanvas.current.renderAll();
+        saveHistory();
+      }, [saveHistory]);
+
+      // Export PNG (sans repère)
+      const exportPng = useCallback(() => {
+        if (!fabricCanvas.current || !printAreaRef.current) return null;
+        const pa = printAreaRef.current;
+        const prevStroke = pa.stroke;
+        pa.set('stroke', null);
+        fabricCanvas.current.renderAll();
+
+        const dataUrl = fabricCanvas.current.toDataURL({
+          format: 'png',
+          multiplier: 2,
+          left: pa.left,
+          top: pa.top,
+          width: pa.width,
+          height: pa.height
+        });
+
+        pa.set('stroke', prevStroke);
+        fabricCanvas.current.renderAll();
+        return dataUrl;
+      }, []);
+
+      // Undo / Redo
+      const undo = useCallback(() => {
+        if (historyIndex <= 0) return;
+        skipSave.current = true;
+        fabricCanvas.current.loadFromJSON(history[historyIndex - 1], () => {
+          fabricCanvas.current.renderAll();
+          setHistoryIndex(prev => prev - 1);
+          skipSave.current = false;
+        });
+      }, [history, historyIndex]);
+
+      const redo = useCallback(() => {
+        if (historyIndex >= history.length - 1) return;
+        skipSave.current = true;
+        fabricCanvas.current.loadFromJSON(history[historyIndex + 1], () => {
+          fabricCanvas.current.renderAll();
+          setHistoryIndex(prev => prev + 1);
+          skipSave.current = false;
+        });
+      }, [history, historyIndex]);
+
+      return {
+        canvasRef,
+        fabricCanvas,
+        activeObject,
+        setMockup,
+        loadDesign,
+        getDesignJSON,
+        clearDesign,
+        addText,
+        addImageFromUrl,
+        addImageFromFile,
+        updateActiveObjectProperty,
+        updateActiveTextStyle,
+        bringToFront,
+        sendToBack,
+        duplicateActive,
+        deleteActive,
+        toggleVisibility,
+        setLock,
+        exportPng,
+        undo,
+        redo,
+        historyIndex,
+        historyLength: history.length
+      };
+    }
+
+    // ------------------------------------------------------------
+    // Composant : Propriétés de l'objet sélectionné (panneau droit)
+    // ------------------------------------------------------------
+    function ObjectProperties({ activeObject, fabricApi }) {
+      const [textProps, setTextProps] = useState({
+        text: '',
+        fill: '#1e293b',
+        fontFamily: 'Inter',
+        fontSize: 28,
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        underline: false,
+        textAlign: 'left'
+      });
+
+      useEffect(() => {
+        if (activeObject && activeObject.type === 'textbox') {
+          setTextProps({
+            text: activeObject.text || '',
+            fill: activeObject.fill || '#1e293b',
+            fontFamily: activeObject.fontFamily || 'Inter',
+            fontSize: activeObject.fontSize || 28,
+            fontWeight: activeObject.fontWeight || 'normal',
+            fontStyle: activeObject.fontStyle || 'normal',
+            underline: activeObject.underline || false,
+            textAlign: activeObject.textAlign || 'left'
+          });
+        }
+      }, [activeObject]);
+
+      const handleChange = (key, value) => {
+        setTextProps(prev => ({ ...prev, [key]: value }));
+        if (key === 'text') {
+          activeObject.set('text', value);
+          fabricApi.fabricCanvas.current.renderAll();
+          fabricApi.updateActiveObjectProperty('text', value);
+        } else {
+          fabricApi.updateActiveTextStyle(key, value);
+        }
+      };
+
+      if (!activeObject) {
+        return (
+          <div className="property-group">
+            <h3><i className="far fa-circle"></i> Aucun objet sélectionné</h3>
+            <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Cliquez sur un élément du canvas ou un calque pour modifier ses propriétés.</p>
+          </div>
+        );
+      }
+
+      if (activeObject.type === 'textbox') {
+        return (
+          <div className="property-group">
+            <h3><i className="fas fa-font"></i> Propriétés du texte</h3>
+            <div className="tool-row" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+              <input
+                type="text"
+                value={textProps.text}
+                onChange={(e) => handleChange('text', e.target.value)}
+                placeholder="Texte"
+              />
+              <div className="tool-row">
+                <input
+                  type="color"
+                  value={textProps.fill}
+                  onChange={(e) => handleChange('fill', e.target.value)}
+                />
+                <select value={textProps.fontFamily} onChange={(e) => handleChange('fontFamily', e.target.value)}>
+                  {FONT_FAMILIES.map(f => <option key={f} value={f}>{f}</option>)}
+                </select>
+                <input
+                  type="number"
+                  value={textProps.fontSize}
+                  onChange={(e) => handleChange('fontSize', parseInt(e.target.value))}
+                  min="8" max="120"
+                  style={{ width: '70px' }}
+                />
+              </div>
+              <div className="tool-row">
+                <button
+                  className={`tool-btn icon ${textProps.fontWeight === 'bold' ? 'active' : ''}`}
+                  onClick={() => handleChange('fontWeight', textProps.fontWeight === 'bold' ? 'normal' : 'bold')}
+                ><b>B</b></button>
+                <button
+                  className={`tool-btn icon ${textProps.fontStyle === 'italic' ? 'active' : ''}`}
+                  onClick={() => handleChange('fontStyle', textProps.fontStyle === 'italic' ? 'normal' : 'italic')}
+                ><i>I</i></button>
+                <button
+                  className={`tool-btn icon ${textProps.underline ? 'active' : ''}`}
+                  onClick={() => handleChange('underline', !textProps.underline)}
+                ><u>U</u></button>
+                <button
+                  className={`tool-btn ${textProps.textAlign === 'left' ? 'active' : ''}`}
+                  onClick={() => handleChange('textAlign', 'left')}
+                ><i className="fas fa-align-left"></i></button>
+                <button
+                  className={`tool-btn ${textProps.textAlign === 'center' ? 'active' : ''}`}
+                  onClick={() => handleChange('textAlign', 'center')}
+                ><i className="fas fa-align-center"></i></button>
+                <button
+                  className={`tool-btn ${textProps.textAlign === 'right' ? 'active' : ''}`}
+                  onClick={() => handleChange('textAlign', 'right')}
+                ><i className="fas fa-align-right"></i></button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      if (activeObject.type === 'image') {
+        return (
+          <div className="property-group">
+            <h3><i className="fas fa-image"></i> Propriétés de l'image</h3>
+            <p>Les images peuvent être redimensionnées, tournées et déplacées directement sur le canvas.</p>
+          </div>
+        );
+      }
+
+      return null;
+    }
+
+    // ------------------------------------------------------------
+    // Composant : Modal de formulaire avant export
+    // ------------------------------------------------------------
+    function ExportModal({ isOpen, onClose, onConfirm }) {
+      const [name, setName] = useState('');
+      const [email, setEmail] = useState('');
+      const [comment, setComment] = useState('');
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        onConfirm({ name, email, comment });
+        onClose();
+      };
+
+      if (!isOpen) return null;
+
+      return (
+        <div className="modal-overlay" onClick={onClose}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h3>Informations avant export</h3>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Votre nom"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+              <textarea
+                placeholder="Commentaire (optionnel)"
+                value={comment}
+                onChange={e => setComment(e.target.value)}
+                rows="3"
+              />
+              <div className="modal-actions">
+                <button type="button" className="tool-btn" onClick={onClose}>Annuler</button>
+                <button type="submit" className="btn-primary">Télécharger</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // ------------------------------------------------------------
+    // Composant : Panneau de gauche (ajout d'éléments)
+    // ------------------------------------------------------------
+    function LeftPanel({ product, face, setFace, productColor, setProductColor, fabricApi }) {
+      const [textContent, setTextContent] = useState('');
+      const [textColor, setTextColor] = useState('#1e293b');
+      const [fontFamily, setFontFamily] = useState('Inter');
+      const [fontSize, setFontSize] = useState(28);
+      const [bold, setBold] = useState(false);
+      const [italic, setItalic] = useState(false);
+      const [underline, setUnderline] = useState(false);
+      const [align, setAlign] = useState('left');
+
+      const handleAddText = () => {
+        if (!textContent.trim()) return;
+        fabricApi.addText(textContent, textColor, {
+          fontSize,
+          fontFamily,
+          bold,
+          italic,
+          underline,
+          align
+        });
+        setTextContent('');
+      };
+
+      return (
+        <div className="panel">
+          <h2><i className="fas fa-cube"></i> Produit & ajout</h2>
+
+          <div>
+            <label style={{ fontSize: '0.8rem', fontWeight: 600 }}>Face à personnaliser</label>
+            <div className="face-selector">
+              {PRODUCTS[product].faces.map(f => (
+                <button
+                  key={f}
+                  className={`face-btn ${face === f ? 'active' : ''}`}
+                  onClick={() => setFace(f)}
+                >
+                  {f === 'front' ? 'Avant' : 'Arrière'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {PRODUCTS[product].hasColor && (
+            <div>
+              <label style={{ fontSize: '0.8rem', fontWeight: 600 }}>Couleur du produit</label>
+              <div className="color-row">
+                <input type="color" value={productColor} onChange={e => setProductColor(e.target.value)} />
+                <span style={{ fontSize: '0.85rem' }}>{productColor}</span>
+              </div>
+            </div>
+          )}
+
+          <div className="text-tools">
+            <h3 style={{ fontSize: '0.9rem' }}><i className="fas fa-plus-circle"></i> Ajouter du texte</h3>
+            <input
+              type="text"
+              placeholder="Votre texte"
+              value={textContent}
+              onChange={e => setTextContent(e.target.value)}
+            />
+            <div className="tool-row">
+              <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} />
+              <select value={fontFamily} onChange={e => setFontFamily(e.target.value)}>
+                {FONT_FAMILIES.map(f => <option key={f} value={f}>{f}</option>)}
+              </select>
+              <input type="number" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} min="8" max="120" style={{ width: '70px' }} />
+            </div>
+            <div className="tool-row">
+              <button className={`tool-btn icon ${bold ? 'active' : ''}`} onClick={() => setBold(!bold)}><b>B</b></button>
+              <button className={`tool-btn icon ${italic ? 'active' : ''}`} onClick={() => setItalic(!italic)}><i>I</i></button>
+              <button className={`tool-btn icon ${underline ? 'active' : ''}`} onClick={() => setUnderline(!underline)}><u>U</u></button>
+              <button className={`tool-btn ${align === 'left' ? 'active' : ''}`} onClick={() => setAlign('left')}><i className="fas fa-align-left"></i></button>
+              <button className={`tool-btn ${align === 'center' ? 'active' : ''}`} onClick={() => setAlign('center')}><i className="fas fa-align-center"></i></button>
+              <button className={`tool-btn ${align === 'right' ? 'active' : ''}`} onClick={() => setAlign('right')}><i className="fas fa-align-right"></i></button>
+            </div>
+            <button className="tool-btn btn-primary" onClick={handleAddText} style={{ border: 'none' }}>
+              <i className="fas fa-plus"></i> Ajouter le texte
+            </button>
+          </div>
+
+          <div>
+            <label style={{ fontSize: '0.8rem', fontWeight: 600 }}><i className="fas fa-upload"></i> Ajouter une image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) fabricApi.addImageFromFile(file);
+                e.target.value = '';
+              }}
+              style={{ marginTop: '0.5rem', width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <button className="tool-btn" onClick={fabricApi.clearDesign}><i className="fas fa-trash-alt"></i> Réinitialiser</button>
+          </div>
+        </div>
+      );
+    }
+
+    // ------------------------------------------------------------
+    // Composant : Panneau de droite (calques, historique, export)
+    // ------------------------------------------------------------
+    function RightPanel({ fabricApi, onExport, exportPreview, activeObject }) {
+      const [layers, setLayers] = useState([]);
+
+      useEffect(() => {
+        if (!fabricApi.fabricCanvas.current) return;
+        const updateLayers = () => {
+          const canvas = fabricApi.fabricCanvas.current;
+          const objects = canvas.getObjects().filter(obj => obj.name !== 'printArea');
+          setLayers(objects.map((obj, index) => ({
+            id: obj.id || `obj_${index}_${Date.now()}`,
+            obj,
+            name: obj.name || (obj.type === 'textbox' ? 'Texte' : 'Image'),
+            type: obj.type,
+            visible: obj.visible !== false,
+            locked: obj.lockMovementX === true,
+            active: canvas.getActiveObject() === obj
+          })));
+        };
+        const canvas = fabricApi.fabricCanvas.current;
+        canvas.on('object:added', updateLayers);
+        canvas.on('object:removed', updateLayers);
+        canvas.on('object:modified', updateLayers);
+        canvas.on('selection:created', updateLayers);
+        canvas.on('selection:cleared', updateLayers);
+        updateLayers();
+
+        return () => {
+          canvas.off('object:added', updateLayers);
+          canvas.off('object:removed', updateLayers);
+          canvas.off('object:modified', updateLayers);
+          canvas.off('selection:created', updateLayers);
+          canvas.off('selection:cleared', updateLayers);
+        };
+      }, [fabricApi.fabricCanvas]);
+
+      const selectLayer = (obj) => {
+        fabricApi.fabricCanvas.current.setActiveObject(obj);
+        fabricApi.fabricCanvas.current.renderAll();
+      };
+
+      const toggleVisible = (obj, e) => {
+        e.stopPropagation();
+        fabricApi.toggleVisibility(obj);
+      };
+
+      const toggleLock = (obj, e) => {
+        e.stopPropagation();
+        fabricApi.setLock(obj, !obj.lockMovementX);
+      };
+
+      return (
+        <div className="panel">
+          <h2><i className="fas fa-layer-group"></i> Calques</h2>
+          <ul className="layer-list">
+            {layers.map(layer => (
+              <li
+                key={layer.id}
+                className={`layer-item ${layer.active ? 'active' : ''}`}
+                onClick={() => selectLayer(layer.obj)}
+              >
+                <span className="layer-preview">
+                  {layer.type === 'textbox' ? <i className="fas fa-font"></i> : <i className="fas fa-image"></i>}
+                </span>
+                <span className="layer-name">{layer.name}</span>
+                <div className="layer-actions">
+                  <button onClick={(e) => toggleVisible(layer.obj, e)} title={layer.visible ? 'Masquer' : 'Afficher'}>
+                    <i className={layer.visible ? 'fas fa-eye' : 'fas fa-eye-slash'}></i>
+                  </button>
+                  <button onClick={(e) => toggleLock(layer.obj, e)} title={layer.locked ? 'Déverrouiller' : 'Verrouiller'}>
+                    <i className={layer.locked ? 'fas fa-lock' : 'fas fa-lock-open'}></i>
+                  </button>
+                </div>
+              </li>
+            ))}
+            {layers.length === 0 && <li style={{ color: '#94a3b8', textAlign: 'center' }}>Aucun élément</li>}
+          </ul>
+
+          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+            <button className="tool-btn" onClick={fabricApi.bringToFront}><i className="fas fa-arrow-up"></i> Avant</button>
+            <button className="tool-btn" onClick={fabricApi.sendToBack}><i className="fas fa-arrow-down"></i> Arrière</button>
+            <button className="tool-btn" onClick={fabricApi.duplicateActive}><i className="fas fa-copy"></i> Dupliquer</button>
+            <button className="tool-btn" onClick={fabricApi.deleteActive}><i className="fas fa-trash"></i> Supprimer</button>
+          </div>
+
+          <hr />
+
+          <ObjectProperties activeObject={activeObject} fabricApi={fabricApi} />
+
+          <hr />
+
+          <h2><i className="fas fa-history"></i> Historique</h2>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button className="tool-btn" onClick={fabricApi.undo} disabled={fabricApi.historyIndex <= 0}>
+              <i className="fas fa-undo"></i> Annuler
+            </button>
+            <button className="tool-btn" onClick={fabricApi.redo} disabled={fabricApi.historyIndex >= fabricApi.historyLength-1}>
+              <i className="fas fa-redo"></i> Rétablir
+            </button>
+          </div>
+
+          <hr />
+
+          <h2><i className="fas fa-download"></i> Export</h2>
+          <button className="tool-btn btn-primary" onClick={onExport} style={{ width: '100%' }}>
+            <i className="fas fa-file-image"></i> Exporter en PNG
+          </button>
+          {exportPreview && (
+            <div className="export-preview">
+              {exportPreview.slice(0, 80)}…
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ------------------------------------------------------------
+    // Composant principal
+    // ------------------------------------------------------------
+    function StudioApp() {
+      const [product, setProduct] = useState('tshirt');
+      const [face, setFace] = useState('front');
+      const [productColor, setProductColor] = useState('#ffffff');
+      const [exportPreview, setExportPreview] = useState(null);
+      const [designs, setDesigns] = useState({}); // Stockage des designs par produit/face
+      const [showModal, setShowModal] = useState(false);
+
+      const fabricApi = useFabricCanvas();
+
+      // Sauvegarder le design actuel (appelé avant de changer de produit/face)
+      const saveCurrentDesign = useCallback(() => {
+        const json = fabricApi.getDesignJSON();
+        if (json) {
+          setDesigns(prev => ({
+            ...prev,
+            [product]: {
+              ...(prev[product] || {}),
+              [face]: json
+            }
+          }));
+        }
+      }, [fabricApi, product, face]);
+
+      // Charger le design pour le produit/face courant
+      const loadCurrentDesign = useCallback(() => {
+        const design = designs?.[product]?.[face];
+        if (design) {
+          fabricApi.loadDesign(design);
+        }
+        // Note : le mockup est déjà chargé par setMockup avant l'appel à cette fonction
+      }, [designs, product, face, fabricApi]);
+
+      // Fonctions de changement avec sauvegarde préalable
+      const handleProductChange = (newProduct) => {
+        if (newProduct === product) return;
+        saveCurrentDesign();
+        setProduct(newProduct);
+        // Si le produit n'a pas la face courante, on prend 'front'
+        if (!PRODUCTS[newProduct].faces.includes(face)) {
+          setFace('front');
+        }
+      };
+
+      const handleFaceChange = (newFace) => {
+        if (newFace === face) return;
+        saveCurrentDesign();
+        setFace(newFace);
+      };
+
+      // Effet pour changer le mockup et charger le design après changement de produit/face
+      useEffect(() => {
+        fabricApi.setMockup(product, face);
+        loadCurrentDesign();
+      }, [product, face]);
+
+      // Gestion de l'export avec formulaire
+      const handleExportClick = () => {
+        setShowModal(true);
+      };
+
+      const handleModalConfirm = (formData) => {
+        console.log('Informations export:', formData);
+        const dataUrl = fabricApi.exportPng();
+        if (!dataUrl) return;
+        setExportPreview(dataUrl);
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `${product}_${face}.png`;
+        link.click();
+      };
+
+      return (
+        <div className="studio">
+          <LeftPanel
+            product={product}
+            face={face}
+            setFace={handleFaceChange}
+            productColor={productColor}
+            setProductColor={setProductColor}
+            fabricApi={fabricApi}
+          />
+
+          <div className="panel" style={{ padding: '0.8rem', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+              <h2><i className="fas fa-pencil-ruler"></i> Éditeur - {PRODUCTS[product].name} ({face === 'front' ? 'avant' : 'arrière'})</h2>
+              <div className="product-tabs">
+                {Object.keys(PRODUCTS).map(pid => (
+                  <button
+                    key={pid}
+                    className={`product-tab ${product === pid ? 'active' : ''}`}
+                    onClick={() => handleProductChange(pid)}
+                  >
+                    <i className={`fas fa-${PRODUCTS[pid].icon}`}></i>
+                    {PRODUCTS[pid].name}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="canvas-shell">
+              <div className="canvas-container">
+                <canvas
+                  id="studio-canvas"
+                  ref={fabricApi.canvasRef}
+                  width={400}
+                  height={400}
+                  style={{ borderRadius: '18px', display: 'block' }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <RightPanel
+            fabricApi={fabricApi}
+            onExport={handleExportClick}
+            exportPreview={exportPreview}
+            activeObject={fabricApi.activeObject}
+          />
+
+          <ExportModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            onConfirm={handleModalConfirm}
+          />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<StudioApp />);
+  </script>
+</body>
+</html>
