@@ -3,4 +3,5 @@
 .env
 __pycache__
 service_account.json
-*.json
+serviceAccountKey.json
+*.log
