@@ -352,8 +352,9 @@
 </head>
 <body>
   <header>
-    <h1><i class="fas fa-paint-brush"></i> Studio Créatif</h1>
+    <h1><i class="fas fa-paint-brush"></i> Studio Créatif [<span id="user-email"></span>]</h1>
     <span class="badge"><i class="fas fa-crown"></i> Full Promoted CM</span>
+    <button id="logoutBtn" class="badge"><span class="badge"><i class="fas fa-crown"></i> Logout</span></button>
   </header>
 
   <div id="root"></div>
@@ -1330,6 +1331,19 @@
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<StudioApp />);
+  </script>
+  <script type="module">
+
+    import "./js/guard.js";
+    import { logout } from "./js/auth.js";
+
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    logoutBtn.onclick = async () => {
+      await logout();
+      window.location.href = "/login.html";
+    };
+
   </script>
 </body>
 </html>
