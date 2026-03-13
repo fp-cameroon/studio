@@ -25,8 +25,9 @@ REPLACE_APP_ID
 Use a local server (important because of ES modules):
 
 Python:
-
-python3 -m http.server 8000
+````bash
+python -m http.server 8000 -d app
+````
 
 Then open: [localhost:8000](http://localhost:8000)
 
