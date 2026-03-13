@@ -5,7 +5,7 @@ __pycache__
 # Firebase secrets
 service_account.json
 serviceAccountKey.json
-firebase-config.js
+#firebase-config.js
 
 
 

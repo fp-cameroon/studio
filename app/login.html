@@ -126,7 +126,7 @@ const password = document.getElementById("password");
 loginBtn.onclick = async () => {
   try{
     await login(email.value,password.value);
-    window.location.href="/dashboard.html";
+    window.location.href="dashboard.html";
   }catch(e){
     msg.textContent=e.message;
   }
@@ -135,7 +135,7 @@ loginBtn.onclick = async () => {
 signupBtn.onclick = async () => {
   try{
     await signup(email.value,password.value);
-    window.location.href="/dashboard.html";
+    window.location.href="dashboard.html";
   }catch(e){
     msg.textContent=e.message;
   }
@@ -144,7 +144,7 @@ signupBtn.onclick = async () => {
 googleBtn.onclick = async () => {
   try{
     await loginGoogle();
-    window.location.href="/dashboard.html";
+    window.location.href="dashboard.html";
   }catch(e){
     msg.textContent=e.message;
   }
