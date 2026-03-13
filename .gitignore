@@ -2,9 +2,13 @@
 .venv
 .env
 __pycache__
+# Firebase secrets
 service_account.json
 serviceAccountKey.json
+firebase-config.js
+
 node_modules
+
 
 
 # Logs
