@@ -7,7 +7,7 @@ service_account.json
 serviceAccountKey.json
 
 # Firebase env switch
-app/js/firebase-config.js
+#app/js/firebase-config.js
 .firebaserc
 
 

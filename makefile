@@ -1,4 +1,4 @@
-ENVIRONMENT?=staging
+ENVIRONMENT?=dev
 
 default: cook
 
@@ -8,6 +8,13 @@ cook:
 	@cp app/js/firebase-config-$(ENVIRONMENT).js app/js/firebase-config.js
 	@echo 😁 done
 
-deploy: cook
+switch:
+	@echo "-> switching project"
+	@firebase use $(ENVIRONMENT)-fp-cameroon
+	@echo 😁 done
+
+deploy: cook switch
 	@echo "-> deploying to <$(ENVIRONMENT)>"
 	@firebase deploy
+	@echo 😁 done
+
