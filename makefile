@@ -9,17 +9,17 @@ cook:
 	@echo "-> cooking env to <$(ENVIRONMENT)>"
 	@cp .firebaserc-$(ENVIRONMENT) .firebaserc
 	@cp app/js/firebase-config-$(ENVIRONMENT).js app/js/firebase-config.js
-	@echo 😁 done
+	@echo "😁 done"
 
-switch:
+set-project:
 	@echo "-> switching project"
 	@firebase use $(ENVIRONMENT)-fp-cameroon
-	@echo 😁 done
+	@echo "😁 done"
 
-deploy: cook switch
+.deploy:
 	@echo "-> deploying to <$(ENVIRONMENT)>"
 	@firebase deploy
-	@echo 😁 done
+	@echo "😁 done"
 
 purge:
 	@echo "-> purge cache of <$(DN)>"
@@ -27,5 +27,8 @@ purge:
 			-H "Authorization: Bearer $(CDN_API_TOKEN)" \
 			-H "Content-Type: application/json" \
 			--data '{"files":["https://$(DN)/"]}'
+	@echo "😁 done"
+
+deploy: cook set-project .deploy purge
 
 
