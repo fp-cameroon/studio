@@ -30,7 +30,7 @@ purge:
 	@echo "😁 done"
 
 serve:
-	@echo "-> serving website locally"
+	@echo "-> serving website locally <http://localhost:8001>"
 	@python -m http.server 8001 -d app
 
 deploy: cook set-project .deploy purge
