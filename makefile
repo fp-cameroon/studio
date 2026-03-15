@@ -29,6 +29,10 @@ purge:
 			--data '{"files":["https://$(DN)/"]}'
 	@echo "😁 done"
 
+serve:
+	@echo "-> serving website locally"
+	@python -m http.server 8001 -d app
+
 deploy: cook set-project .deploy purge
 
 
