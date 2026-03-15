@@ -7,16 +7,20 @@ on:
       - app/**
       - .github/workflows/deploy-staging.yml
 
+
 env:
   ENVIRONMENT: staging
   PROJECT: staging-fp-cameroon
+  CDN_ZONE: e12a5207c887608d69a76c72c0c22346
+  DN: studio-staging.fp-cameroon.com
+
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: "cooking_firebase_config"
+      - name: cooking_firebase_config
         run: make cook
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -24,3 +28,5 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING_FP_CAMEROON }}
           channelId: live
           projectId: ${{ env.PROJECT }}
+      - name: purge_cdn
+        run: make purge
