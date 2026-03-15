@@ -26,10 +26,10 @@ Use a local server (important because of ES modules):
 
 Python:
 ````bash
-python -m http.server 8000 -d app
+python -m http.server 8001 -d app
 ````
 
-Then open: [localhost:8000](http://localhost:8000)
+Then open: [localhost:8001](http://localhost:8001)
 
 ## Pages
 
